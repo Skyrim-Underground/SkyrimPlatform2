@@ -1,0 +1,21 @@
+{
+  "name": "commonlibsse-ng",
+  "version": "12.1.0",
+  "description": "alandtse CommonLibSSE-NG, built for Skyrim AE only (runtime 1.7).",
+  "homepage": "https://github.com/alandtse/CommonLibSSE-NG",
+  "license": "GPL-3.0-or-later",
+  "supports": "windows & x64 & static",
+  "dependencies": [
+    "directxtk",
+    "rapidcsv",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
