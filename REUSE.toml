@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 Skyrim Underground contributors
+
+version = 1
+
+# Files whose format has no comment syntax.
+[[annotations]]
+path = ["**/*.json", "NOTICE", "tests/sp2-run/*.expected.txt"]
+SPDX-FileCopyrightText = "2026 Skyrim Underground contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"

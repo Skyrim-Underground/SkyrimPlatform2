@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 Skyrim Underground contributors
+
+# Install trees
+/bin/
+
+# CMake build trees, including each preset's vcpkg_installed/
+/out/

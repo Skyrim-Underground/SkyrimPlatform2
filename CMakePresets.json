@@ -1,0 +1,223 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 4,
+    "minor": 2,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/bin/${presetName}",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "environment": {
+        "VCPKG_DISABLE_METRICS": "1"
+      },
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static-v145",
+        "VCPKG_HOST_TRIPLET": "x64-windows-static-v145",
+        "VCPKG_INSTALL_OPTIONS": "--clean-buildtrees-after-build;--clean-packages-after-build"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "vs2026",
+      "hidden": true,
+      "inherits": "base",
+      "generator": "Visual Studio 18 2026",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "toolset": {
+        "value": "v145,host=x64",
+        "strategy": "set"
+      }
+    },
+    {
+      "name": "ninja-msvc",
+      "hidden": true,
+      "inherits": "base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "dev",
+      "hidden": true,
+      "cacheVariables": {
+        "SP2_DEV_BUILD": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "cacheVariables": {
+        "SP2_DEV_BUILD": "OFF"
+      }
+    },
+    {
+      "name": "vs2026-dev",
+      "displayName": "VS 2026, dev (Debug, SP2_DEV_BUILD=ON)",
+      "inherits": [
+        "vs2026",
+        "dev"
+      ]
+    },
+    {
+      "name": "vs2026-release",
+      "displayName": "VS 2026, release (Release, SP2_DEV_BUILD=OFF)",
+      "inherits": [
+        "vs2026",
+        "release"
+      ]
+    },
+    {
+      "name": "ninja-msvc-dev",
+      "displayName": "Ninja + MSVC from VsDevCmd, dev (Debug, SP2_DEV_BUILD=ON)",
+      "inherits": [
+        "ninja-msvc",
+        "dev"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "ninja-msvc-release",
+      "displayName": "Ninja + MSVC from VsDevCmd, release (Release, SP2_DEV_BUILD=OFF)",
+      "inherits": [
+        "ninja-msvc",
+        "release"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "vs2026-gate-refusal",
+      "displayName": "VS 2026, gate refusal test (dev build whose gate allows only 1.7.99.0)",
+      "inherits": [
+        "vs2026",
+        "dev"
+      ],
+      "cacheVariables": {
+        "SP2_GATE_TEST_ALLOWLIST": "1.7.99.0"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "vs2026-dev",
+      "configurePreset": "vs2026-dev",
+      "configuration": "Debug"
+    },
+    {
+      "name": "vs2026-release",
+      "configurePreset": "vs2026-release",
+      "configuration": "Release"
+    },
+    {
+      "name": "ninja-msvc-dev",
+      "configurePreset": "ninja-msvc-dev"
+    },
+    {
+      "name": "ninja-msvc-release",
+      "configurePreset": "ninja-msvc-release"
+    },
+    {
+      "name": "vs2026-gate-refusal",
+      "configurePreset": "vs2026-gate-refusal",
+      "configuration": "Debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test-base",
+      "hidden": true,
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "vs2026-dev",
+      "inherits": "test-base",
+      "configurePreset": "vs2026-dev",
+      "configuration": "Debug"
+    },
+    {
+      "name": "vs2026-release",
+      "inherits": "test-base",
+      "configurePreset": "vs2026-release",
+      "configuration": "Release"
+    },
+    {
+      "name": "ninja-msvc-dev",
+      "inherits": "test-base",
+      "configurePreset": "ninja-msvc-dev"
+    },
+    {
+      "name": "ninja-msvc-release",
+      "inherits": "test-base",
+      "configurePreset": "ninja-msvc-release"
+    },
+    {
+      "name": "vs2026-gate-refusal",
+      "inherits": "test-base",
+      "configurePreset": "vs2026-gate-refusal",
+      "configuration": "Debug"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "vs2026-dev",
+      "steps": [
+        { "type": "configure", "name": "vs2026-dev" },
+        { "type": "build", "name": "vs2026-dev" },
+        { "type": "test", "name": "vs2026-dev" }
+      ]
+    },
+    {
+      "name": "vs2026-release",
+      "steps": [
+        { "type": "configure", "name": "vs2026-release" },
+        { "type": "build", "name": "vs2026-release" },
+        { "type": "test", "name": "vs2026-release" }
+      ]
+    },
+    {
+      "name": "ninja-msvc-dev",
+      "steps": [
+        { "type": "configure", "name": "ninja-msvc-dev" },
+        { "type": "build", "name": "ninja-msvc-dev" },
+        { "type": "test", "name": "ninja-msvc-dev" }
+      ]
+    },
+    {
+      "name": "ninja-msvc-release",
+      "steps": [
+        { "type": "configure", "name": "ninja-msvc-release" },
+        { "type": "build", "name": "ninja-msvc-release" },
+        { "type": "test", "name": "ninja-msvc-release" }
+      ]
+    },
+    {
+      "name": "vs2026-gate-refusal",
+      "steps": [
+        { "type": "configure", "name": "vs2026-gate-refusal" },
+        { "type": "build", "name": "vs2026-gate-refusal" },
+        { "type": "test", "name": "vs2026-gate-refusal" }
+      ]
+    }
+  ]
+}

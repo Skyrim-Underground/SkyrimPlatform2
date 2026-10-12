@@ -1,0 +1,14 @@
+{
+  "name": "skyrimplatform2",
+  "version": "0.1.0",
+  "description": "SkyrimPlatform2: Skyrim Underground's SKSE plugin for TypeScript-authored scripts.",
+  "license": "AGPL-3.0-or-later",
+  "supports": "windows & x64 & static",
+  "dependencies": [
+    "catch2",
+    "commonlibsse-ng",
+    "nlohmann-json",
+    "quickjs-ng",
+    "spdlog"
+  ]
+}
