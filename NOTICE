@@ -1,0 +1,52 @@
+SkyrimPlatform2
+Copyright (C) 2026 Skyrim Underground contributors
+
+SkyrimPlatform2 is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version,
+with the additional permission at the end of LICENSE. It is distributed WITHOUT ANY
+WARRANTY; see LICENSE for details.
+
+
+LICENCE SCOPE
+
+This section is a statement of intent, not legal advice.
+
+- All SkyrimPlatform2 code written for Skyrim Underground is AGPL-3.0-or-later.
+- Any mod or gamemode that uses SkyrimPlatform2 is intended to be AGPL-3.0-or-later.
+  That includes scripts and packages written against its API and native modules built
+  against its module ABI.
+- Plugins made with the Creation Kit (ESP, ESM and ESL files) and SKSE plugins that do
+  not use SkyrimPlatform2 are separate works and are not covered.
+- Whether a script that only calls an API is a derivative work is legally unsettled.
+  The Free Software Foundation's view is that plugins which share function calls and
+  data structures with their host form a single combined program.
+- The additional permission in LICENSE (combining with Skyrim, SKSE and their
+  libraries) covers the code contributed to SkyrimPlatform2. Code from other projects
+  keeps its own terms.
+
+
+THIRD-PARTY COMPONENTS
+
+SkyrimPlatform2 is built with the components below. vcpkg fetches and builds them
+from source at the versions pinned in vcpkg-configuration.json and ports/; ORIGINS.md
+lists the exact pins. Each component's own licence applies to its code.
+
+Linked into SkyrimPlatform2.dll (their licence texts ship as THIRD_PARTY_NOTICES in
+Data/SkyrimPlatform2/):
+
+- CommonLibSSE-NG (alandtse): GPL-3.0-or-later with a Modding Exception and a
+  GPL-3.0 Linking Exception. SKSE plugin interface and game layouts. Combined with
+  SkyrimPlatform2 under section 13 of GPL-3.0 and AGPL-3.0.
+- spdlog: MIT. Logging.
+- fmt: MIT. Text formatting, used by spdlog.
+
+Used to build, not linked into SkyrimPlatform2.dll:
+
+- DirectXTK, DirectXMath: MIT. rapidcsv: BSD-3-Clause. Dependencies of
+  CommonLibSSE-NG's own build.
+- QuickJS-ng: MIT. JavaScript engine; linked into the script layer (sp2_js), the
+  sp2-run harness and the unit tests so far, none of which ships yet.
+- nlohmann-json: MIT. JSON parsing (header-only); used by the script layer and tests,
+  not yet by the DLL.
+- Catch2: BSL-1.0. Unit tests only.
