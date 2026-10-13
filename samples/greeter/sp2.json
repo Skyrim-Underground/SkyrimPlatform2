@@ -1,0 +1,12 @@
+{
+  "name": "greeter",
+  "version": "0.1.0",
+  "sp2Api": 0,
+  "main": "main.js",
+  "settings": {
+    "greeting": "Hello",
+    "audience": { "name": "Tamriel", "excited": false },
+    "everyFrames": 5
+  },
+  "memoryLimitMiB": 32
+}
