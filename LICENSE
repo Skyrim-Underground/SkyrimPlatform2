@@ -659,3 +659,54 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <https://www.gnu.org/licenses/>.
+
+-------------------------------------------------------------------------------
+
+          ADDITIONAL PERMISSION UNDER GNU AGPL VERSION 3 SECTION 7
+                (Skyrim and Script Extender combination)
+
+  The SkyrimPlatform2 code written for Skyrim Underground is licensed under
+the GNU Affero General Public License version 3, or (at your option) any
+later version, with the following additional permission.
+
+  Definitions.
+
+  "The Game" means The Elder Scrolls V: Skyrim Special Edition, with or
+without the Anniversary Edition content, in any version: its executable
+(SkyrimSE.exe) and the program files and libraries its publisher
+distributes with it.
+
+  "The Script Extender" means SKSE64, the Skyrim Script Extender, in any
+version: its loader, its runtime library and the libraries its authors
+distribute with it.
+
+  "Covered Code" means the parts of this Program contributed to the
+SkyrimPlatform2 project, whichever names their copyright notices carry.
+Code that NOTICE or ORIGINS.md lists as coming from another project is not
+Covered Code.
+
+  Permission.
+
+  If you modify the Covered Code, or any covered work, by linking or
+combining it with the Game or the Script Extender (or a modified version of
+either), the licensors of the Covered Code grant you additional permission
+to convey the resulting work. The parts of the Game and of the Script
+Extender in such a combination do not have to be licensed under the GNU
+AGPL, and the Corresponding Source of the combination does not have to
+include their source code.
+
+  Limits.
+
+  This permission covers the Game and the Script Extender only. It does not
+extend to any other program, plugin, mod or library, even one made for use
+with the Game or the Script Extender: all other code combined with the
+Covered Code remains subject to the GNU AGPL in all respects.
+
+  This permission is granted only for the Covered Code. Code from other
+authors that is included in or linked into this Program keeps its own
+licence and whatever permissions its own authors grant; NOTICE and
+ORIGINS.md list it.
+
+  If you modify the Covered Code, you may extend this permission to your
+version, but you are not obliged to do so. If you do not wish to, delete
+this permission from your version.
