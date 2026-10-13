@@ -1,0 +1,23 @@
+[info] packages: greeter 0.1.0 found
+[info] packages: hello 0.1.0 found
+[info] [greeter] settings: {"greeting":"Hello","audience":{"name":"Tamriel","excited":true},"everyFrames":5}
+[info] [greeter] settings are read-only: TypeError
+[info] packages: greeter loaded
+[info] [hello] hello from the module body
+[info] [hello] a microtask runs as soon as the module body ends
+[info] packages: hello loaded
+[info] [hello] ready: the module has finished loading
+[info] [hello] tick 1: dt 0 ms, paused false, inGame false
+[info] [hello] tick 2: dt 20 ms, paused false, inGame false
+[info] [hello] interval 1 at 40 ms
+[debug] [hello] microtask after interval 1
+[info] [hello] timeout for hello at 60 ms
+[info] [greeter] Hello, Tamriel! (frame 5)
+[info] [hello] interval 2 at 80 ms
+[debug] [hello] microtask after interval 2
+[info] [hello] tick 5: dt 20 ms, paused false, inGame false
+[info] [hello] interval 3 at 120 ms
+[warning] [hello] interval cleared
+[debug] [hello] microtask after interval 3
+[info] [greeter] Hello, Tamriel! (frame 10)
+[info] [hello] tick 10: dt 20 ms, paused false, inGame false

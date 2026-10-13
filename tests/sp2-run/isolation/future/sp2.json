@@ -1,0 +1,6 @@
+{
+  "name": "future",
+  "version": "2.0.0",
+  "sp2Api": 1,
+  "main": "main.js"
+}

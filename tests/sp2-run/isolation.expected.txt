@@ -1,0 +1,11 @@
+[info] packages: broken 1.0.0 found
+[error] packages: future disabled: sp2.json: sp2Api: the package needs API 1, and this SkyrimPlatform2 provides API 0
+[error] packages: hashed disabled: sp2.json: unknown field "files"
+[info] packages: steady 1.0.0 found
+[error] [broken] main.js failed to load: TypeError: cannot import 'fs': a package imports only 'skyrimPlatform2'
+[error] packages: broken disabled: its module failed to load
+[info] [steady] module body ran
+[info] packages: steady loaded
+[info] [steady] tick 1
+[info] [steady] tick 2
+[info] [steady] tick 3
