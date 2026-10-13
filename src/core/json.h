@@ -15,6 +15,12 @@ namespace sp2::core
 
 	// Nesting limit, so a hostile file cannot exhaust the stack when the result is walked.
 	inline constexpr int kMaxJsonDepth = 64;
+	
+	class JsonError : public std::runtime_error
+    {
+    public:
+        using std::runtime_error::runtime_error;
+    };
 
 	// Strict RFC 8259 (BOM allowed): no comments, trailing commas, duplicate names or nesting past kMaxJsonDepth.
 	[[nodiscard]] Json ParseStrictJson(std::string_view text);
