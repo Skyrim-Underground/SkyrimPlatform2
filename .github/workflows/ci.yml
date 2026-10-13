@@ -1,0 +1,111 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 Skyrim Underground contributors
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build (${{ matrix.preset }})
+    # The label for the Windows Server 2025 image with Visual Studio 2026 (toolset v145).
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [vs2026-dev, vs2026-release, ninja-msvc-dev, ninja-msvc-release]
+    env:
+      VCPKG_DISABLE_METRICS: "1"
+      VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}\.vcpkg-cache,readwrite
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Read the vcpkg baseline and create the binary cache folder
+        id: baseline
+        shell: pwsh
+        run: |
+          $baseline = (Get-Content vcpkg-configuration.json -Raw | ConvertFrom-Json).'default-registry'.baseline
+          if ($baseline -notmatch '^[0-9a-f]{40}$') { throw "vcpkg baseline is not a commit SHA: $baseline" }
+          "sha=$baseline" >> $env:GITHUB_OUTPUT
+          New-Item -ItemType Directory -Force .vcpkg-cache | Out-Null
+
+      # The vcpkg tool comes from the baseline commit; bootstrap-vcpkg checks its SHA512.
+      - name: Check out vcpkg at the baseline
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: microsoft/vcpkg
+          ref: ${{ steps.baseline.outputs.sha }}
+          path: .vcpkg
+          persist-credentials: false
+
+      - name: Bootstrap vcpkg
+        shell: cmd
+        run: .vcpkg\bootstrap-vcpkg.bat -disableMetrics
+
+      # All presets build the same packages for the same triplet, so they share one cache entry.
+      - name: vcpkg binary cache
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: .vcpkg-cache
+          key: vcpkg-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**', 'triplets/**') }}
+          restore-keys: |
+            vcpkg-
+
+      - name: Configure, build, test and install
+        shell: cmd
+        env:
+          PRESET: ${{ matrix.preset }}
+        run: |
+          for /f "usebackq delims=" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSINSTALL=%%i"
+          call "%VSINSTALL%\Common7\Tools\VsDevCmd.bat" -arch=x64 -host_arch=x64 -no_logo || exit /b 1
+          set "VCPKG_ROOT=%GITHUB_WORKSPACE%\.vcpkg"
+          cmake --workflow --preset %PRESET% --fresh || exit /b 1
+          cmake --build --preset %PRESET% --target install || exit /b 1
+          dumpbin /nologo /dependents "bin\%PRESET%\Data\SKSE\Plugins\SkyrimPlatform2.dll" || exit /b 1
+
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13.16"
+
+      - name: Banned-API lint
+        run: python tools/lint/banned_api.py
+
+      # reuse is built from its sdist; every file pip fetches is checked against tools/lint/requirements*.txt.
+      - name: Install reuse
+        run: |
+          python -m venv "$RUNNER_TEMP/reuse"
+          "$RUNNER_TEMP/reuse/bin/python" -m pip install --require-hashes --no-deps -r tools/lint/requirements-build.txt
+          "$RUNNER_TEMP/reuse/bin/python" -m pip install --require-hashes --no-deps --no-build-isolation --no-binary reuse -r tools/lint/requirements.txt
+          "$RUNNER_TEMP/reuse/bin/python" -m pip check
+
+      - name: REUSE lint
+        run: '"$RUNNER_TEMP/reuse/bin/reuse" lint'
+
+      - name: DCO sign-off on pull request commits
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python tools/lint/dco_check.py "$BASE_SHA" "$HEAD_SHA"
