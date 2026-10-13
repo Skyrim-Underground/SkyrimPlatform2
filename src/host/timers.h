@@ -8,8 +8,6 @@
 #include <cstdint>
 #include <map>
 #include <optional>
-#include <set>
-#include <utility>
 #include <vector>
 
 namespace sp2::host
@@ -45,7 +43,6 @@ namespace sp2::host
         };
 
         std::map<Id, Timer> timers_;
-        std::set<std::pair<js::Clock::time_point, Id>> order_;
         Id next_ = 1;
     };
 }

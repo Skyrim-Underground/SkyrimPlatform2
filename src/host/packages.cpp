@@ -12,6 +12,7 @@
 #include <exception>
 #include <format>
 #include <optional>
+#include <ranges>
 #include <system_error>
 #include <utility>
 
@@ -44,18 +45,6 @@ namespace sp2::host
                 return std::string("an exception of unknown type");
             }
             return std::nullopt;
-        }
-
-        std::string Join(const std::vector<std::string>& parts)
-        {
-            std::string text;
-            for (const std::string& part : parts) {
-                if (!text.empty()) {
-                    text += "; ";
-                }
-                text += part;
-            }
-            return text;
         }
     }
 
@@ -107,7 +96,7 @@ namespace sp2::host
         }
         auto manifest = core::ParseManifest(*text, name, kApiMajor);
         if (!manifest) {
-            Disable(package, std::format("sp2.json: {}", Join(manifest.error())));
+            Disable(package, std::format("sp2.json: {}", manifest.error() | std::views::join_with(std::string_view("; ")) | std::ranges::to<std::string>()));
             return;
         }
         package.version = manifest->version;
